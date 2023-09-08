@@ -1,9 +1,11 @@
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { removed } from '../../redux/phonebookSlice';
+import { getSelContacts, getSelFilter } from '../../redux/selectors';
 import s from './contactsList.module.css';
 
 const ContactsList: React.FC = (): JSX.Element => {
-  const state = useAppSelector((state) => state.phonebook);
+  const contacts = useAppSelector(getSelContacts);
+  const filter = useAppSelector(getSelFilter);
   const dispatch = useAppDispatch();
 
   const removeContact = (id: string) => {
@@ -11,9 +13,9 @@ const ContactsList: React.FC = (): JSX.Element => {
   };
 
   const renderContacts = () => {
-    const filterValue = state.filter.toLowerCase();
+    const filterValue = filter.toLowerCase();
 
-    return state.contacts.filter(({ name }) => {
+    return contacts.filter(({ name }) => {
       const nameValue = name.toLowerCase();
 
       return nameValue.includes(filterValue);

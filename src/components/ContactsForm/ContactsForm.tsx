@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { nanoid } from '@reduxjs/toolkit';
 import { added } from '../../redux/phonebookSlice';
 import s from './contactsForm.module.css';
+import { getSelContacts } from '../../redux/selectors';
 
 const ContactsForm: React.FC = (): JSX.Element => {
   const [contact, setContact] = useState({
@@ -12,7 +13,7 @@ const ContactsForm: React.FC = (): JSX.Element => {
   });
 
   const dispatch = useAppDispatch();
-  const contacts = useAppSelector((state) => state.phonebook.contacts);
+  const contacts = useAppSelector(getSelContacts);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setContact((prev) => ({

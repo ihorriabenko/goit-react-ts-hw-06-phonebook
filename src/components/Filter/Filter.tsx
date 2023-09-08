@@ -1,9 +1,10 @@
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { filtered } from '../../redux/phonebookSlice';
+import { getSelFilter } from '../../redux/selectors';
 import s from './filter.module.css';
 
 const Filter: React.FC = (): JSX.Element => {
-  const filter = useAppSelector((state) => state.phonebook.filter);
+  const filter = useAppSelector(getSelFilter);
   const dispatch = useAppDispatch();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
