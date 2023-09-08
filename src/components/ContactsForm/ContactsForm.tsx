@@ -32,8 +32,7 @@ const ContactsForm: React.FC = (): JSX.Element => {
     dispatch(
       added({
         id: nanoid(),
-        name: contact.name,
-        phoneNumber: contact.phoneNumber,
+        ...contact,
       })
     );
   };
