@@ -1,13 +1,13 @@
-import s from './filter.module.scss';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { filtered } from '../../redux/phonebookSlice';
+import s from './filter.module.css';
 
-interface FilterProps {
-  filter: string;
-  setFilter: React.Dispatch<React.SetStateAction<string>>;
-}
+const Filter: React.FC = (): JSX.Element => {
+  const filter = useAppSelector((state) => state.phonebook.filter);
+  const dispatch = useAppDispatch();
 
-const Filter: React.FC<FilterProps> = ({ filter, setFilter }): JSX.Element => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter(event.target.value);
+    dispatch(filtered(event.target.value));
   };
 
   return (
@@ -15,7 +15,7 @@ const Filter: React.FC<FilterProps> = ({ filter, setFilter }): JSX.Element => {
       <label className={s.filter}>
         Search:
         <input
-          className={s.filter__input}
+          className={s.input}
           type='text'
           name='filter'
           value={filter}

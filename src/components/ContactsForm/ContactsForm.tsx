@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import { ContactWithoutId } from '../../types/common';
-import s from './contactsForm.module.scss';
+import { ContactWithoutId } from '../../types/phonebook';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { nanoid } from '@reduxjs/toolkit';
+import { added } from '../../redux/phonebookSlice';
+import s from './contactsForm.module.css';
 
-interface ContactsFormProps {
-  addContact: (contact: ContactWithoutId) => void;
-}
-
-const ContactsForm: React.FC<ContactsFormProps> = ({
-  addContact,
-}): JSX.Element => {
+const ContactsForm: React.FC = (): JSX.Element => {
   const [contact, setContact] = useState({
     name: '',
-    contactNumber: '',
+    phoneNumber: '',
   });
+
+  const dispatch = useAppDispatch();
+  const contacts = useAppSelector((state) => state.phonebook.contacts);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setContact((prev) => ({
@@ -21,21 +21,37 @@ const ContactsForm: React.FC<ContactsFormProps> = ({
     }));
   };
 
+  const addContact = (contact: ContactWithoutId) => {
+    const userExists = contacts.find(
+      (el) => el.name.toLowerCase() === contact.name.toLowerCase()
+    );
+
+    if (userExists) return alert(`${userExists.name} already in contacts`);
+
+    dispatch(
+      added({
+        id: nanoid(),
+        name: contact.name,
+        phoneNumber: contact.phoneNumber,
+      })
+    );
+  };
+
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
     addContact(contact);
 
-    setContact({ name: '', contactNumber: '' });
+    setContact({ name: '', phoneNumber: '' });
   };
 
   return (
     <>
       <form className={s.form} onSubmit={handleSubmit}>
-        <label className={s.form__label}>
+        <label className={s.label}>
           Name:
           <input
-            className={s.form__input}
+            className={s.input}
             onChange={handleChange}
             type='text'
             name='name'
@@ -46,20 +62,20 @@ const ContactsForm: React.FC<ContactsFormProps> = ({
             required
           />
         </label>
-        <label className={s.form__label}>
+        <label className={s.label}>
           Phone:
           <input
-            className={s.form__input}
+            className={s.input}
             onChange={handleChange}
             type='tel'
-            name='contactNumber'
-            value={contact.contactNumber}
+            name='phoneNumber'
+            value={contact.phoneNumber}
             pattern='\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}'
             maxLength={30}
             required
           />
         </label>
-        <button className={s.form__btn}>Add contact</button>
+        <button className={s.btn}>Add contact</button>
       </form>
     </>
   );
